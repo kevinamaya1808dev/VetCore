@@ -66,9 +66,9 @@ const services = [
           </button>
 
           <dialog 
-            id={`modal-${service.id}`} 
-            class="backdrop:bg-slate-900/60 p-0 rounded-3xl border-none shadow-2xl max-w-lg w-[90%] fixed inset-0 m-auto overflow-hidden"
-          >
+  id={`modal-${service.id}`} 
+  class="backdrop:bg-slate-900/60 p-0 rounded-3xl border-none shadow-2xl max-w-lg w-[90%] fixed inset-0 m-auto overflow-hidden z-[999]"
+>
             <div class="flex flex-col h-full bg-white relative">
               
               <div class="w-full h-56 overflow-hidden">
@@ -138,43 +138,55 @@ const services = [
 </style>
 
 <script>
-  const openButtons = document.querySelectorAll('[data-open-modal]');
-  const closeButtons = document.querySelectorAll('[data-close-modal]');
+  // Esta función encapsula la lógica para que podamos llamarla cada vez que sea necesario
+  const setupModals = () => {
+    const openButtons = document.querySelectorAll('[data-open-modal]');
+    const closeButtons = document.querySelectorAll('[data-close-modal]');
 
-  openButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const modalId = button.getAttribute('data-open-modal');
-      if (modalId) {
-        const modal = document.getElementById(modalId) as HTMLDialogElement;
-        if (modal) {
-          modal.showModal();
-          document.body.style.overflow = 'hidden';
+    openButtons.forEach(button => {
+      // Usamos 'click' pero los navegadores móviles lo traducen bien. 
+      // El problema suele ser que el script se ejecuta antes de que el botón exista.
+      button.addEventListener('click', (e) => {
+        e.preventDefault(); // Evitamos cualquier comportamiento extraño
+        const modalId = button.getAttribute('data-open-modal');
+        if (modalId) {
+          const modal = document.getElementById(modalId) as HTMLDialogElement;
+          if (modal) {
+            modal.showModal();
+            document.body.style.overflow = 'hidden';
+          }
         }
-      }
+      });
     });
-  });
 
-  closeButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const modalId = button.getAttribute('data-close-modal');
-      if (modalId) {
-        const modal = document.getElementById(modalId) as HTMLDialogElement;
-        if (modal) {
-          modal.close();
+    closeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const modalId = button.getAttribute('data-close-modal');
+        if (modalId) {
+          const modal = document.getElementById(modalId) as HTMLDialogElement;
+          if (modal) {
+            modal.close();
+            document.body.style.overflow = 'auto';
+          }
+        }
+      });
+    });
+
+    // Cerrar al hacer clic en el fondo
+    const dialogs = document.querySelectorAll('dialog');
+    dialogs.forEach(dialog => {
+      dialog.addEventListener('click', (e) => {
+        if (e.target === dialog) {
+          (dialog as HTMLDialogElement).close();
           document.body.style.overflow = 'auto';
         }
-      }
+      });
     });
-  });
+  };
 
-  const dialogs = document.querySelectorAll('dialog');
-  dialogs.forEach(dialog => {
-    dialog.addEventListener('click', (e) => {
-      if (e.target === dialog) {
-        const modal = dialog as HTMLDialogElement;
-        modal.close();
-        document.body.style.overflow = 'auto';
-      }
-    });
-  });
+  // ESTO ES CLAVE: Ejecutar cuando el DOM esté listo
+  document.addEventListener('DOMContentLoaded', setupModals);
+  
+  // Para que funcione incluso si usas transiciones de página de Astro
+  document.addEventListener('astro:page-load', setupModals);
 </script>
