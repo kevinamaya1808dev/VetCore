@@ -67,11 +67,11 @@ const services = [
 
           <dialog 
             id={`modal-${service.id}`} 
-            class="p-0 rounded-3xl border-none shadow-2xl max-w-lg w-[90%] fixed inset-0 m-auto overflow-hidden z-[9999]"
+            class="p-0 rounded-3xl border-none shadow-2xl max-w-lg w-[90%] fixed inset-0 m-auto overflow-hidden z-[9999] bg-transparent"
           >
-            <div class="flex flex-col h-full bg-white relative">
+            <div class="flex flex-col h-full bg-white relative z-50 w-full overflow-hidden rounded-3xl">
               
-              <div class="w-full h-48 md:h-56 flex-shrink-0 overflow-hidden">
+              <div class="w-full h-48 md:h-56 flex-shrink-0 overflow-hidden bg-slate-100">
                 <img 
                   src={service.image} 
                   alt={`Imagen descriptiva del servicio ${service.title}`}
@@ -81,16 +81,16 @@ const services = [
 
               <button 
                 data-close-modal={`modal-${service.id}`} 
-                class="absolute top-4 right-4 p-2 bg-white/70 backdrop-blur-sm hover:bg-white rounded-full transition-colors z-10"
+                class="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm hover:bg-white rounded-full transition-colors z-[60] shadow-sm"
               >
                 <Icon name="lucide:x" class="w-5 h-5 text-slate-600" />
               </button>
 
-              <div class="p-6 md:p-8 flex-grow flex flex-col justify-between">
+              <div class="p-6 md:p-8 flex-grow flex flex-col justify-between bg-white">
                 <div>
                   <div class="flex items-center gap-4 mb-5 text-left">
-                    <div class="w-12 h-12 flex-shrink-0 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center">
-                      <Icon name={service.icon} class="w-6 h-6" />
+                    <div class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center">
+                      <Icon name={service.icon} class="w-5 h-5 md:w-6 md:h-6" />
                     </div>
                     <h3 class="text-xl md:text-2xl font-bold text-slate-900">{service.title}</h3>
                   </div>
@@ -104,14 +104,13 @@ const services = [
                   <a 
                     href="#contacto" 
                     onclick="const m = this.closest('dialog'); if(m) m.close(); document.body.style.overflow = 'auto';"
-                    class="w-full py-3.5 md:py-4 bg-teal-600 text-white rounded-2xl font-bold text-center hover:bg-teal-700 transition-all shadow-lg shadow-teal-100 flex items-center justify-center gap-2"
+                    class="w-full py-3.5 md:py-4 bg-teal-600 text-white rounded-2xl font-bold text-center flex items-center justify-center gap-2 shadow-lg shadow-teal-100"
                   >
                     <Icon name="lucide:calendar-days" class="w-5 h-5" />
                     Agendar Cita
                   </a>
                 </div>
               </div>
-
             </div>
           </dialog>
         </div>
@@ -121,83 +120,78 @@ const services = [
 </section>
 
 <style>
-  /* 1. Aseguramos que el diálogo esté siempre al frente y use flex para centrar */
   dialog[open] {
     display: flex !important;
-    flex-direction: column;
-    z-index: 9999; /* Valor muy alto para iOS */
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
     animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  /* 2. Corrección específica para Safari en iPhone (Fondo oscuro con desenfoque) */
+  /* Fondo oscuro: En iOS es mejor omitir el blur si causa problemas visuales */
   dialog::backdrop {
-    background: rgba(15, 23, 42, 0.7);
-    /* Safari requiere el prefijo -webkit- */
+    background: rgba(15, 23, 42, 0.8) !important;
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
   }
 
-  /* 3. Evitamos que el modal herede el blur del fondo en iOS */
+  /* Forzamos renderizado por hardware en iOS */
   dialog {
-    -webkit-transform: translateZ(0); /* Truco para forzar renderizado en iOS */
+    -webkit-transform: translateZ(0);
     transform: translateZ(0);
   }
 
   @keyframes zoom {
-    from { transform: scale(0.9); opacity: 0; }
+    from { transform: scale(0.95); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
   }
 </style>
 
 <script>
-  // Esta función encapsula la lógica para que podamos llamarla cada vez que sea necesario
   const setupModals = () => {
     const openButtons = document.querySelectorAll('[data-open-modal]');
     const closeButtons = document.querySelectorAll('[data-close-modal]');
 
     openButtons.forEach(button => {
-      // Usamos 'click' pero los navegadores móviles lo traducen bien. 
       button.addEventListener('click', (e) => {
-        e.preventDefault(); // Evitamos cualquier comportamiento extraño
+        e.preventDefault();
         const modalId = button.getAttribute('data-open-modal');
         if (modalId) {
           const modal = document.getElementById(modalId) as HTMLDialogElement;
           if (modal) {
             modal.showModal();
+            // Bloqueo de scroll para todas las plataformas
             document.body.style.overflow = 'hidden';
           }
         }
       });
     });
 
+    const closeModal = (modal: HTMLDialogElement) => {
+      modal.close();
+      document.body.style.overflow = 'auto';
+    };
+
     closeButtons.forEach(button => {
       button.addEventListener('click', () => {
         const modalId = button.getAttribute('data-close-modal');
         if (modalId) {
           const modal = document.getElementById(modalId) as HTMLDialogElement;
-          if (modal) {
-            modal.close();
-            document.body.style.overflow = 'auto';
-          }
+          if (modal) closeModal(modal);
         }
       });
     });
 
-    // Cerrar al hacer clic en el fondo
     const dialogs = document.querySelectorAll('dialog');
     dialogs.forEach(dialog => {
       dialog.addEventListener('click', (e) => {
         if (e.target === dialog) {
-          (dialog as HTMLDialogElement).close();
-          document.body.style.overflow = 'auto';
+          closeModal(dialog as HTMLDialogElement);
         }
       });
     });
   };
 
-  // ESTO ES CLAVE: Ejecutar cuando el DOM esté listo
   document.addEventListener('DOMContentLoaded', setupModals);
-  
-  // Para que funcione incluso si usas transiciones de página de Astro
   document.addEventListener('astro:page-load', setupModals);
 </script>
