@@ -1,23 +1,59 @@
+---
+// 1. LAS IMPORTACIONES SIEMPRE VAN PRIMERO
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro'; // <--- Importación añadida
+import '../styles/global.css';
+
+// 2. DESPUÉS LAS INTERFACES Y LA LÓGICA
+interface Props {
+    title: string;
+    description?: string;
+}
+
+const { title, description = "Cuidado profesional para tus mascotas" } = Astro.props;
+---
+
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="description" content={description} />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{title}</title>
+    </head>
+    <body class="bg-slate-50 text-slate-900 selection:bg-teal-100 flex flex-col min-h-screen">
+        <Navbar />
+        
+        <main class="flex-grow">
+            <slot /> 
+        </main>
+
+        <Footer /> </body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+<style is:global>
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+    }
+
+    /* Estilo opcional para que la barra de scroll sea más estética con tu marca */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #0d9488; /* Color Teal-600 */
+        border-radius: 5px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #0f766e;
+    }
 </style>

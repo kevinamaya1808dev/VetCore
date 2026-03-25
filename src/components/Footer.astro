@@ -1,0 +1,75 @@
+---
+// src/components/Footer.astro
+import { Icon } from 'astro-icon/components';
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-slate-900 text-slate-300 pt-16 pb-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+      
+      <div class="space-y-4">
+        <div class="flex items-center gap-2 text-white">
+          <Icon name="lucide:paw-print" class="w-8 h-8 text-teal-400" />
+          <span class="text-2xl font-bold tracking-tight">VetCore</span>
+        </div>
+        <p class="text-sm leading-relaxed">
+          Dedicados al cuidado integral de tus mascotas con profesionalismo y amor. Tu tranquilidad es nuestra prioridad.
+        </p>
+        <div class="flex gap-4">
+          <a href="#" class="hover:text-teal-400 transition-colors"><Icon name="lucide:facebook" class="w-5 h-5" /></a>
+          <a href="#" class="hover:text-teal-400 transition-colors"><Icon name="lucide:instagram" class="w-5 h-5" /></a>
+          <a href="#" class="hover:text-teal-400 transition-colors"><Icon name="lucide:twitter" class="w-5 h-5" /></a>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-white font-bold mb-6 text-lg">Navegación</h4>
+        <ul class="space-y-4 text-sm">
+          <li><a href="#inicio" class="hover:text-teal-400 transition-colors">Inicio</a></li>
+          <li><a href="#servicios" class="hover:text-teal-400 transition-colors">Servicios</a></li>
+          <li><a href="#ubicacion" class="hover:text-teal-400 transition-colors">Ubicación</a></li>
+          <li><a href="#contacto" class="hover:text-teal-400 transition-colors">Agendar Cita</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-white font-bold mb-6 text-lg">Servicios</h4>
+        <ul class="space-y-4 text-sm">
+          <li>Consulta Veterinaria</li>
+          <li>Cirugía General</li>
+          <li>Estética y Baño</li>
+          <li>Farmacia Especializada</li>
+        </ul>
+      </div>
+
+      <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+        <h4 class="text-white font-bold mb-4 flex items-center gap-2">
+          <Icon name="lucide:alert-circle" class="w-5 h-5 text-red-400" />
+          Emergencias
+        </h4>
+        <p class="text-xs mb-4 text-slate-400">Atención inmediata fuera de horarios de oficina.</p>
+        <a href="tel:5599990000" class="text-xl font-bold text-teal-400 hover:underline">
+          +52 55 9999 0000
+        </a>
+      </div>
+    </div>
+
+    <div class="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+      <p>&copy; {currentYear} VetCore - Todos los derechos reservados.</p>
+      
+      <p class="flex items-center gap-1.5">
+        Diseñado con <Icon name="lucide:heart" class="w-3.5 h-3.5 text-red-500 fill-red-500" /> por 
+        <a 
+          href="https://kasolutions.com.mx/" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="text-teal-400 font-bold hover:text-white transition-colors decoration-teal-400/30 underline-offset-4 underline"
+        >
+          KA-Solutions
+        </a>
+      </p>
+    </div>
+  </div>
+</footer>

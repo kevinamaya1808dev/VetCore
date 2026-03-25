@@ -1,0 +1,180 @@
+---
+// src/components/Services.astro
+import { Icon } from 'astro-icon/components';
+
+const services = [
+  {
+    id: "consulta",
+    title: "Consulta General",
+    description: "Revisión completa para asegurar la salud preventiva de tu mejor amigo.",
+    detailed: "Nuestras consultas incluyen un examen físico completo, revisión de signos vitales, peso, estado de la piel y pelaje. También ofrecemos asesoría nutricional y preventiva personalizada para cada etapa de vida de tu mascota.",
+    icon: "lucide:stethoscope",
+    image: "/images/service-consulta.webp" 
+  },
+  {
+    id: "vacunas",
+    title: "Vacunación",
+    description: "Esquemas completos de vacunación y desparasitación interna y externa.",
+    detailed: "Contamos con las mejores vacunas del mercado para proteger contra Rabia, Parvovirus, Moquillo y más. Incluimos recordatorios automáticos para que nunca olvides la próxima dosis de tu compañero.",
+    icon: "lucide:syringe",
+    image: "/images/service-vacunas.webp"
+  },
+  {
+    id: "cirugia",
+    title: "Cirugía",
+    description: "Quirófano equipado para procedimientos esterilización y tejidos blandos.",
+    detailed: "Realizamos esterilizaciones, limpiezas dentales y cirugías de tejidos blandos bajo protocolos estrictos de anestesia y monitoreo constante para garantizar la seguridad de tu mascota en todo momento.",
+    icon: "lucide:scissors",
+    image: "/images/service-cirugia.webp"
+  },
+  {
+    id: "estetica",
+    title: "Estética Canina",
+    description: "Baño, corte de pelo y limpieza de oídos para que luzcan increíbles.",
+    detailed: "Más que belleza, es salud. Incluye baño medicado o cosmético, corte de uñas, limpieza de glándulas anales y oídos, realizado por estilistas expertos en manejo amable.",
+    icon: "lucide:bath",
+    image: "/images/service-estetica.webp"
+  }
+];
+---
+
+<section id="servicios" class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 class="text-3xl md:text-5xl font-extrabold text-slate-950 mb-6 tracking-tight">
+      Cuidado integral <span class="text-teal-600">para cada etapa</span>
+    </h2>
+    <p class="text-lg text-slate-600 max-w-2xl mx-auto mb-16">
+      Atención médica de excelencia con un trato compasivo.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {services.map((service) => (
+        <div class="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-teal-200 hover:shadow-2xl transition-all group flex flex-col items-center">
+          
+          <div class="w-16 h-16 rounded-2xl bg-teal-100/60 text-teal-600 flex items-center justify-center mb-6 group-hover:bg-teal-600 group-hover:text-white transition-all">
+            <Icon name={service.icon} class="w-8 h-8" />
+          </div>
+          
+          <h3 class="text-xl font-bold text-slate-950 mb-3">{service.title}</h3>
+          <p class="text-slate-600 text-sm mb-6 flex-grow">{service.description}</p>
+          
+          <button 
+            data-open-modal={`modal-${service.id}`}
+            class="text-sm font-semibold text-teal-600 flex items-center gap-1.5 hover:text-teal-700 transition-colors"
+          >
+            Saber más <Icon name="lucide:arrow-right" class="w-4 h-4" />
+          </button>
+
+          <dialog 
+            id={`modal-${service.id}`} 
+            class="backdrop:bg-slate-900/60 p-0 rounded-3xl border-none shadow-2xl max-w-lg w-[90%] fixed inset-0 m-auto overflow-hidden"
+          >
+            <div class="flex flex-col h-full bg-white relative">
+              
+              <div class="w-full h-56 overflow-hidden">
+                <img 
+                  src={service.image} 
+                  alt={`Imagen descriptiva del servicio ${service.title}`}
+                  class="w-full h-full object-cover object-center"
+                />
+              </div>
+
+              <button 
+                data-close-modal={`modal-${service.id}`} 
+                class="absolute top-4 right-4 p-2 bg-white/70 backdrop-blur-sm hover:bg-white rounded-full transition-colors z-10"
+              >
+                <Icon name="lucide:x" class="w-5 h-5 text-slate-600" />
+              </button>
+
+              <div class="p-8 flex-grow flex flex-col justify-center">
+                <div class="flex items-center gap-4 mb-6 text-left">
+                  <div class="w-12 h-12 flex-shrink-0 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center">
+                    <Icon name={service.icon} class="w-6 h-6" />
+                  </div>
+                  <h3 class="text-2xl font-bold text-slate-900">{service.title}</h3>
+                </div>
+                
+                <p class="text-slate-600 leading-relaxed mb-10 text-left flex-grow">
+                  {service.detailed}
+                </p>
+                
+                <div class="mt-auto">
+                  <a 
+                    href="#contacto" 
+                    onclick="const m = this.closest('dialog'); if(m) m.close(); document.body.style.overflow = 'auto';"
+                    class="w-full py-4 bg-teal-600 text-white rounded-2xl font-bold text-center hover:bg-teal-700 transition-all shadow-lg shadow-teal-100 flex items-center justify-center gap-2"
+                  >
+                    <Icon name="lucide:calendar-days" class="w-5 h-5" />
+                    Agendar Cita
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </dialog>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Centrado y comportamiento del modal */
+  dialog[open] {
+    display: flex;
+    flex-direction: column;
+    animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes zoom {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  dialog::backdrop {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+  }
+</style>
+
+<script>
+  const openButtons = document.querySelectorAll('[data-open-modal]');
+  const closeButtons = document.querySelectorAll('[data-close-modal]');
+
+  openButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const modalId = button.getAttribute('data-open-modal');
+      if (modalId) {
+        const modal = document.getElementById(modalId) as HTMLDialogElement;
+        if (modal) {
+          modal.showModal();
+          document.body.style.overflow = 'hidden';
+        }
+      }
+    });
+  });
+
+  closeButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const modalId = button.getAttribute('data-close-modal');
+      if (modalId) {
+        const modal = document.getElementById(modalId) as HTMLDialogElement;
+        if (modal) {
+          modal.close();
+          document.body.style.overflow = 'auto';
+        }
+      }
+    });
+  });
+
+  const dialogs = document.querySelectorAll('dialog');
+  dialogs.forEach(dialog => {
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) {
+        const modal = dialog as HTMLDialogElement;
+        modal.close();
+        document.body.style.overflow = 'auto';
+      }
+    });
+  });
+</script>
